@@ -10,7 +10,7 @@ SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# 게임 이미지 로드
+# 게임 이미지들 로드
 RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
 JUMPING = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
@@ -38,9 +38,9 @@ class Dinosaur:
     JUMP_VEL = 8.5  # 공룡의 점프 속도
 
     def __init__(self):
-        self.duck_img = DUCKING  # 웅크린 상태 이미지
-        self.run_img = RUNNING  # 달리는 상태 이미지
-        self.jump_img = JUMPING  # 점프 상태 이미지
+        self.duck_img = DUCKING
+        self.run_img = RUNNING
+        self.jump_img = JUMPING
 
         self.dino_duck = False  # 웅크린 상태 여부
         self.dino_run = True  # 달리는 상태 여부
@@ -235,28 +235,32 @@ def menu(death_count):
     global points  # 전역 변수에 접근하기 위해 global 키워드를 사용
     run = True  # 메뉴 실행 상태를 나타내는 변수를 True로 설정
     while run:
-        SCREEN.fill((255, 255, 255))  # 화면을 흰색으로 채움
-        font = pygame.font.Font('freesansbold.ttf', 30)  # 폰트 객체를 생성
+        try:
+            SCREEN.fill((255, 255, 255))  # 화면을 흰색으로 채움
+            font = pygame.font.Font('freesansbold.ttf', 30)  # 폰트 객체를 생성
 
-        if death_count == 0:  # 사망 횟수가 0인 경우
-            text = font.render("Press any Key to Start", True, (0, 0, 0))  # 시작 메시지를 렌더링
-        elif death_count > 0:  # 사망 횟수가 0보다 큰 경우
-            text = font.render("Press any Key to Restart", True, (0, 0, 0))  # 재시작 메시지를 렌더링
-            score = font.render("Your Score: " + str(points), True, (0, 0, 0))  # 점수를 렌더링
-            scoreRect = score.get_rect()  # 점수의 사각 영역을 가져옴
-            scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)  # 점수의 중심 좌표를 설정
-            SCREEN.blit(score, scoreRect)  # 화면에 점수를 그림
+            if death_count == 0:  # 사망 횟수가 0인 경우
+                text = font.render("Press Space Bar to Start", True, (0, 0, 0))  # 시작 메시지를 렌더링
+            elif death_count > 0:  # 사망 횟수가 0보다 큰 경우
+                text = font.render("Press Space Bar to Restart", True, (0, 0, 0))  # 재시작 메시지를 렌더링
+                score = font.render("Your Score: " + str(points), True, (0, 0, 0))  # 점수를 렌더링
+                scoreRect = score.get_rect()  # 점수의 사각 영역을 가져옴
+                scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)  # 점수의 중심 좌표를 설정
+                SCREEN.blit(score, scoreRect)  # 화면에 점수를 그림
 
-        textRect = text.get_rect()  # 텍스트의 사각 영역을 가져옴
-        textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)  # 텍스트의 중심 좌표를 설정
-        SCREEN.blit(text, textRect)  # 화면에 텍스트를 그림
-        SCREEN.blit(RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140))  # 달리는 공룡 이미지를 그림
-        pygame.display.update()  # 화면 업데이트
+            textRect = text.get_rect()  # 텍스트의 사각 영역을 가져옴
+            textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)  # 텍스트의 중심 좌표를 설정
+            SCREEN.blit(text, textRect)  # 화면에 텍스트를 그림
+            SCREEN.blit(RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140))  # 달리는 공룡 이미지를 그림
+            pygame.display.update()  # 화면 업데이트
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False  # 종료 이벤트가 발생하면 메뉴 실행 상태를 False로 변경
-            if event.type == pygame.KEYDOWN:
-                main()  # 키가 눌리면 main() 함수를 호출하여 게임을 시작
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False  # 종료 이벤트가 발생하면 메뉴 실행 상태를 False로 변경
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:  # 스페이스바를 눌렀을 때
+                        main()  # 게임을 재실행하는 함수 호출
+        except KeyboardInterrupt:
+            run = False  # KeyboardInterrupt 예외가 발생하면 메뉴 실행 상태를 False로 변경
 
 menu(death_count=0)
