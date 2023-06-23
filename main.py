@@ -10,10 +10,10 @@ SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# 게임 이미지들 로드
+# 게임 이미지 로드
 RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
-JUMPING = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
+JUMPING = pygame.image.load(os.path.join("Assets/Dino", "RabbitJump.png"))
 DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "DinoDuck1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "DinoDuck2.png"))]
 
@@ -35,7 +35,7 @@ class Dinosaur:
     X_POS = 80  # 공룡의 초기 x 좌표
     Y_POS = 310  # 공룡의 초기 y 좌표
     Y_POS_DUCK = 340  # 웅크린 공룡의 y 좌표
-    JUMP_VEL = 8.5  # 공룡의 점프 속도
+    JUMP_VEL = 8.5  # 토끼의 점프 속도
 
     def __init__(self):
         self.duck_img = DUCKING
