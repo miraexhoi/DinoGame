@@ -1,7 +1,6 @@
 import pygame
 import os
 import random
-import time
 
 # Pygame 초기화
 pygame.init()
@@ -12,11 +11,11 @@ SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # 게임 이미지 로드
-RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
-JUMPING = pygame.image.load(os.path.join("Assets/Dino", "RabbitJump.png"))
-DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "DinoDuck1.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "DinoDuck2.png"))]
+RUNNING = [pygame.image.load(os.path.join("Assets/Animals", "DinoRun1.png")),
+           pygame.image.load(os.path.join("Assets/Animals", "DinoRun2.png"))]
+JUMPING = pygame.image.load(os.path.join("Assets/Animals", "RabbitJump.png"))
+DUCKING = [pygame.image.load(os.path.join("Assets/Animals", "CatDuck1.png")),
+           pygame.image.load(os.path.join("Assets/Animals", "CatDuck2.png"))]
 
 SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
                 pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
@@ -40,12 +39,12 @@ class Dinosaur:
     JUMP_VEL = 8.5  # 토끼의 점프 속도
 
     def __init__(self):
-        self.rabbit_jump = None
+        # self.rabbit_jump = None
         self.duck_img = DUCKING
         self.run_img = RUNNING
         self.jump_img = JUMPING
 
-        self.dino_duck = False  # 웅크린 상태 여부
+        self.cat_duck = False  # 웅크린 상태 여부
         self.dino_run = True  # 달리는 상태 여부
         self.rabbit_jump = False  # 점프 상태 여부
 
@@ -57,37 +56,40 @@ class Dinosaur:
         self.dino_rect.y = self.Y_POS  # 공룡의 y 좌표
 
     def update(self, userInput):
-        if self.dino_duck:
-            self.duck()  # 현재 청크 상태가 "절반 앉기"인 경우 청크 애니메이션을 업데이트
+        if self.cat_duck:
+            self.duck()  # 현재 상태가 "절반 앉기"인 경우 애니메이션을 업데이트
         if self.dino_run:
-            self.run()  # 현재 청크 상태가 "달리기"인 경우 달리기 애니메이션을 업데이트
+            self.run()  # 현재 상태가 "달리기"인 경우 달리기 애니메이션을 업데이트
         if self.rabbit_jump:
-            self.jump()  # 현재 청크 상태가 "점프"인 경우 점프 애니메이션을 업데이트
+            self.jump()  # 현재 상태가 "점프"인 경우 점프 애니메이션을 업데이트
+
         if self.step_index >= 10:
-            self.step_index = 0  # 스텝 인덱스가 10 이상인 경우 0으로 재설정합니다. 이는 애니메이션 스프라이트 시퀀스를 순환시키기 위한 조치
+            self.step_index = 0  # 스텝 인덱스가 10 이상인 경우 0으로 재설정. 애니메이션 스프라이트 시퀀스를 순환시키기 위한 조치.
 
         # 공룡이 동작됨을 테스트할때 다시 와서 볼 조건문들
         # 키보드의 입력과 공룡의 현상태의 따른 동작을 제어하는 코드
         if userInput[pygame.K_UP] and not self.rabbit_jump:
-            self.dino_duck = False
+            self.cat_duck = False
             self.dino_run = False
             self.rabbit_jump = True
-        elif userInput[pygame.K_DOWN] and not self.rabbit_jump:
-            self.dino_duck = True
+        elif userInput[pygame.K_DOWN]: # not self.rabbit_jump:
+            self.cat_duck = True
             self.dino_run = False
             self.rabbit_jump = False
         elif not (self.rabbit_jump or userInput[pygame.K_DOWN]):
-            self.dino_duck = False
+            self.cat_duck = False
             self.dino_run = True
             self.rabbit_jump = False
 
     def duck(self):
-        # self.image = self.duck_img[self.duck_img // 5]  # 이미지 스프라이트 변경
-        self.image = self.duck_img
+        self.image = self.duck_img[self.duck_img // 5]  # 이미지 스프라이트 변경
+        # self.image = self.duck_img
         self.dino_rect = self.image.get_rect()  # 사각형 영역 업데이트
         self.dino_rect.x = self.X_POS  # x 좌표 업데이트
         self.dino_rect.y = self.Y_POS_DUCK  # y 좌표 업데이트
         self.step_index += 1
+        if self.step_index >= 10:
+            self.step_index = 0
 
     def run(self):
         self.image = self.run_img[self.step_index // 5]  # 이미지 스프라이트 변경
@@ -108,7 +110,6 @@ class Dinosaur:
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.dino_rect.x, self.dino_rect.y))  # 공룡 이미지 그리기
 
-
 class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)  # 구름의 초기 x 좌표 설정
@@ -125,7 +126,6 @@ class Cloud:
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))  # 구름 이미지 그리기
 
-
 class Obstacle:
     def __init__(self, image, type):
         self.image = image  # 장애물 이미지 리스트
@@ -141,22 +141,19 @@ class Obstacle:
     def draw(self, SCREEN):
         SCREEN.blit(self.image[self.type], self.rect)  # 장애물 이미지 그리기
 
-
-class SmallCactus(Obstacle):
+class SmallCactus(Obstacle): # Obstacle 클래스를 상속받는 SmallCactus 클래스
     def __init__(self, image):
         self.type = random.randint(0, 2)  # 장애물 종류 랜덤 설정
         super().__init__(image, self.type)  # 부모 클래스의 초기화 메서드 호출
         self.rect.y = 325  # 장애물의 y 좌표 설정
 
-
-class LargeCactus(Obstacle):
+class LargeCactus(Obstacle): # Obstacle 클래스를 상속받는 LargeCactus 클래스
     def __init__(self, image):
         self.type = random.randint(0, 2)  # 장애물 종류 랜덤 설정
         super().__init__(image, self.type)  # 부모 클래스의 초기화 메서드 호출
         self.rect.y = 300  # 장애물의 y 좌표 설정
 
-
-class Bird(Obstacle):
+class Bird(Obstacle): # Obstacle 클래스를 상속받는 Bird 클래스
     def __init__(self, image):
         self.type = 0  # 장애물 종류 설정
         super().__init__(image, self.type)  # 부모 클래스의 초기화 메서드 호출
@@ -190,7 +187,7 @@ def main():
         if points % 100 == 0:  # 점수가 100의 배수인 경우
             game_speed += 1  # 게임 속도를 1 증가
 
-        text = font.render("Points: " + str(points), True, (0, 0, 0))  # 텍스트를 렌더링
+        text = font.render("Scores: " + str(points), True, (0, 0, 0))  # 텍스트를 렌더링
         textRect = text.get_rect()  # 텍스트의 사각 영역을 가져옴
         textRect.center = (1000, 40)  # 텍스트의 중심 좌표를 설정
         SCREEN.blit(text, textRect)  # 화면에 텍스트를 그림
@@ -211,7 +208,7 @@ def main():
                 run = False  # 종료 이벤트가 발생하면 실행 상태를 False로 변경
 
         SCREEN.fill((255, 255, 255))  # 화면을 흰색으로 채움
-        userInput = pygame.key.get_pressed()  # 사용자 입력을 받음
+        userInput = pygame.key.get_pressed()  # 사용자 입력을 userInput에 받음
 
         player.draw(SCREEN)  # 플레이어를 화면에 그림
         player.update(userInput)  # 플레이어 업데이트
@@ -242,7 +239,6 @@ def main():
         clock.tick(30)  # 프레임 속도를 30으로 제한
         pygame.display.update()  # 화면을 업데이트
 
-
 def menu(death_count: object) -> object:
     global points  # 전역 변수에 접근하기 위해 global 키워드를 사용
     run = True  # 메뉴 실행 상태를 나타내는 변수를 True로 설정
@@ -269,7 +265,7 @@ def menu(death_count: object) -> object:
             if event.type == pygame.QUIT:
                 run = False  # 종료 이벤트가 발생하면 메뉴 실행 상태를 False로 변경
             if event.type == pygame.KEYDOWN:
-                main()  # 키가 눌리면 main() 함수를 호출하여 게임을 시작
-
+                if event.key == pygame.K_SPACE:  # 스페이스바를 눌렀을 때
+                    main()  # 게임을 재실행하는 함수 호출
 
 menu(death_count=0)
