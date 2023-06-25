@@ -39,7 +39,6 @@ class Dinosaur:
     JUMP_VEL = 8.5  # 토끼의 점프 속도
 
     def __init__(self):
-        # self.rabbit_jump = None
         self.duck_img = DUCKING
         self.run_img = RUNNING
         self.jump_img = JUMPING
@@ -72,7 +71,7 @@ class Dinosaur:
             self.cat_duck = False
             self.dino_run = False
             self.rabbit_jump = True
-        elif userInput[pygame.K_DOWN]: # not self.rabbit_jump:
+        elif userInput[pygame.K_DOWN] and not self.rabbit_jump:
             self.cat_duck = True
             self.dino_run = False
             self.rabbit_jump = False
@@ -82,8 +81,7 @@ class Dinosaur:
             self.rabbit_jump = False
 
     def duck(self):
-        self.image = self.duck_img[self.duck_img // 5]  # 이미지 스프라이트 변경
-        # self.image = self.duck_img
+        self.image = self.duck_img[self.step_index // 5]  # 이미지 스프라이트 변경
         self.dino_rect = self.image.get_rect()  # 사각형 영역 업데이트
         self.dino_rect.x = self.X_POS  # x 좌표 업데이트
         self.dino_rect.y = self.Y_POS_DUCK  # y 좌표 업데이트
