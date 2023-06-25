@@ -56,17 +56,15 @@ class Dinosaur:
 
     def update(self, userInput):
         if self.cat_duck:
-            self.duck()  # 현재 상태가 "절반 앉기"인 경우 애니메이션을 업데이트
+            self.duck()  # 현재 상태가 "절반 앉기"인 경우 애니메이션 업데이트
         if self.dino_run:
-            self.run()  # 현재 상태가 "달리기"인 경우 달리기 애니메이션을 업데이트
+            self.run()  # 현재 상태가 "달리기"인 경우 달리기 애니메이션 업데이트
         if self.rabbit_jump:
-            self.jump()  # 현재 상태가 "점프"인 경우 점프 애니메이션을 업데이트
+            self.jump()  # 현재 상태가 "점프"인 경우 점프 애니메이션 업데이트
 
         if self.step_index >= 10:
-            self.step_index = 0  # 스텝 인덱스가 10 이상인 경우 0으로 재설정. 애니메이션 스프라이트 시퀀스를 순환시키기 위한 조치.
+            self.step_index = 0  # 스텝 인덱스가 10 이상인 경우 0으로 재설정.
 
-        # 공룡이 동작됨을 테스트할때 다시 와서 볼 조건문들
-        # 키보드의 입력과 공룡의 현상태의 따른 동작을 제어하는 코드
         if userInput[pygame.K_UP] and not self.rabbit_jump:
             self.cat_duck = False
             self.dino_run = False
@@ -106,7 +104,7 @@ class Dinosaur:
             self.jump_vel = self.JUMP_VEL  # 점프 속도 초기화
 
     def draw(self, SCREEN):
-        SCREEN.blit(self.image, (self.dino_rect.x, self.dino_rect.y))  # 공룡 이미지 그리기
+        SCREEN.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
 
 class Cloud:
     def __init__(self):
@@ -122,7 +120,7 @@ class Cloud:
             self.y = random.randint(50, 100)  # 새로운 높이로 재설정
 
     def draw(self, SCREEN):
-        SCREEN.blit(self.image, (self.x, self.y))  # 구름 이미지 그리기
+        SCREEN.blit(self.image, (self.x, self.y))
 
 class Obstacle:
     def __init__(self, image, type):
@@ -166,17 +164,17 @@ class Bird(Obstacle): # Obstacle 클래스를 상속받는 Bird 클래스
 
 
 def main():
-    global game_speed, x_pos_bg, y_pos_bg, points, obstacles  # 전역 변수를 선언
+    global game_speed, x_pos_bg, y_pos_bg, points, obstacles  # 전역 변수 선언
     run = True  # 실행 상태를 나타내는 변수를 True로 설정
-    clock = pygame.time.Clock()  # 프레임 속도를 제어하기 위해 Clock 객체를 생성
-    player = Dinosaur()  # Dinosaur 객체를 생성
-    cloud = Cloud()  # Cloud 객체를 생성
-    game_speed = 14  # 초기 게임 속도를 설정
-    x_pos_bg = 0  # 배경의 초기 x 좌표를 설정
-    y_pos_bg = 380  # 배경의 초기 y 좌표를 설정
+    clock = pygame.time.Clock()  # 프레임 속도를 제어하기 위해 Clock 객체 생성
+    player = Dinosaur()  # Dinosaur 객체 생성
+    cloud = Cloud()  # Cloud 객체 생성
+    game_speed = 14  # 초기 게임 속도 설정
+    x_pos_bg = 0  # 배경의 초기 x 좌표 설정
+    y_pos_bg = 380  # 배경의 초기 y 좌표 설정
     points = 0  # 초기 점수를 설정
-    font = pygame.font.Font('freesansbold.ttf', 20)  # 텍스트를 렌더링하기 위한 폰트 객체를 생성
-    obstacles = []  # 장애물을 저장하기 위한 빈 리스트를 생성
+    font = pygame.font.Font('freesansbold.ttf', 20)  # 텍스트를 렌더링하기 위한 폰트 객체 생성
+    obstacles = []  # 장애물을 저장하기 위한 빈 리스트 생성
     death_count = 0  # 초기 사망 횟수를 설정
 
     def score():
@@ -186,9 +184,9 @@ def main():
             game_speed += 1  # 게임 속도를 1 증가
 
         text = font.render("Scores: " + str(points), True, (0, 0, 0))  # 텍스트를 렌더링
-        textRect = text.get_rect()  # 텍스트의 사각 영역을 가져옴
-        textRect.center = (1000, 40)  # 텍스트의 중심 좌표를 설정
-        SCREEN.blit(text, textRect)  # 화면에 텍스트를 그림
+        textRect = text.get_rect()
+        textRect.center = (1000, 40)
+        SCREEN.blit(text, textRect)
 
     def background():
         global x_pos_bg, y_pos_bg  # 전역 변수에 접근하기 위해 global 키워드를 사용
@@ -205,11 +203,11 @@ def main():
             if event.type == pygame.QUIT:
                 run = False  # 종료 이벤트가 발생하면 실행 상태를 False로 변경
 
-        SCREEN.fill((255, 255, 255))  # 화면을 흰색으로 채움
+        SCREEN.fill((255, 255, 255))
         userInput = pygame.key.get_pressed()  # 사용자 입력을 userInput에 받음
 
-        player.draw(SCREEN)  # 플레이어를 화면에 그림
-        player.update(userInput)  # 플레이어 업데이트
+        player.draw(SCREEN)
+        player.update(userInput)
 
         if len(obstacles) == 0:  # 장애물이 없는 경우
             if random.randint(0, 2) == 0:  # 랜덤하게 장애물 생성
@@ -220,48 +218,48 @@ def main():
                 obstacles.append(Bird(BIRD))
 
         for obstacle in obstacles:
-            obstacle.draw(SCREEN)  # 장애물을 화면에 그림
-            obstacle.update()  # 장애물을 업데이트
+            obstacle.draw(SCREEN)
+            obstacle.update()
             if player.dino_rect.colliderect(obstacle.rect):  # 플레이어와 장애물이 충돌한 경우
                 pygame.time.delay(2000)  # 2초 동안 일시 정지
-                death_count += 1  # 사망 횟수를 증가
+                death_count += 1
                 menu(death_count)  # 메뉴를 호출하여 게임을 재시작
 
-        background()  # 배경을 그림
+        background()
 
-        cloud.draw(SCREEN)  # 구름을 화면에 그림
-        cloud.update()  # 구름을 업데이트
+        cloud.draw(SCREEN)
+        cloud.update()
 
-        score()  # 점수를 업데이트하고 화면에 표시
+        score()
 
         clock.tick(30)  # 프레임 속도를 30으로 제한
-        pygame.display.update()  # 화면을 업데이트
+        pygame.display.update()
 
 def menu(death_count: object) -> object:
     global points  # 전역 변수에 접근하기 위해 global 키워드를 사용
     run = True  # 메뉴 실행 상태를 나타내는 변수를 True로 설정
     while run:
-        SCREEN.fill((255, 255, 255))  # 화면을 흰색으로 채움
+        SCREEN.fill((255, 255, 255))
         font = pygame.font.Font('freesansbold.ttf', 30)  # 폰트 객체를 생성
 
-        if death_count == 0:  # 사망 횟수가 0인 경우
+        if death_count == 0:
             text = font.render("Press any Key to Start", True, (0, 0, 0))  # 시작 메시지를 렌더링
-        elif death_count > 0:  # 사망 횟수가 0보다 큰 경우
+        elif death_count > 0:
             text = font.render("Press any Key to Restart", True, (0, 0, 0))  # 재시작 메시지를 렌더링
             score = font.render("Your Score: " + str(points), True, (0, 0, 0))  # 점수를 렌더링
             scoreRect = score.get_rect()  # 점수의 사각 영역을 가져옴
             scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)  # 점수의 중심 좌표를 설정
-            SCREEN.blit(score, scoreRect)  # 화면에 점수를 그림
+            SCREEN.blit(score, scoreRect)
 
-        textRect = text.get_rect()  # 텍스트의 사각 영역을 가져옴
-        textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)  # 텍스트의 중심 좌표를 설정
-        SCREEN.blit(text, textRect)  # 화면에 텍스트를 그림
-        SCREEN.blit(RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140))  # 달리는 공룡 이미지를 그림
-        pygame.display.update()  # 화면 업데이트
+        textRect = text.get_rect()
+        textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        SCREEN.blit(text, textRect)
+        SCREEN.blit(RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140))
+        pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False  # 종료 이벤트가 발생하면 메뉴 실행 상태를 False로 변경
+                run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:  # 스페이스바를 눌렀을 때
                     main()  # 게임을 재실행하는 함수 호출
